@@ -4,30 +4,62 @@ import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { Professor } from './models/professor';
 import { CommonModule, NgFor } from '@angular/common';
 import { Observable } from 'rxjs';
-import { FormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ProfessorDto } from './models/professorDto';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, NgFor, FormsModule],
+  imports: [
+    RouterOutlet,
+    CommonModule,
+    NgFor,
+    FormsModule,
+    ReactiveFormsModule,
+    NgxMaskDirective,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
+  providers: [provideNgxMask()],
 })
 export class AppComponent implements OnInit {
   title = 'AplicacaoTeste';
   http = inject(HttpClient);
+  fb = inject(FormBuilder);
   urlApi = 'https://localhost:7130/';
   professores$?: Observable<Professor[]>;
   professorEncontrado$?: Observable<Professor>;
   valorBusca = '';
 
-  //add professor
-  professorNome = '';
-  professorCpf = '';
-  professorEmail = '';
-  professorTel = '';
-  professorMateria = '';
+  // FormGroup para adicionar professor
+  professorForm: FormGroup;
+
+  constructor() {
+    // Inicializa o FormGroup com validações
+    this.professorForm = this.fb.group({
+      nome: ['', Validators.required],
+      cpf: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/),
+        ],
+      ],
+      email: ['', [Validators.required, Validators.email]],
+      telefone: [
+        '',
+        [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)],
+      ],
+      materia: ['', Validators.required],
+    });
+  }
 
   ngOnInit(): void {
     this.obterProfessores();
@@ -48,23 +80,18 @@ export class AppComponent implements OnInit {
   }
 
   addProfessor() {
-    const professor: ProfessorDto = {
-      nome: this.professorNome,
-      cpf: this.professorCpf,
-      email: this.professorEmail,
-      telefone: this.professorTel,
-      materia: this.professorMateria,
-    };
+    if (this.professorForm.invalid) {
+      this.professorForm.markAllAsTouched();
+      return;
+    }
+
+    const professor: ProfessorDto = this.professorForm.value;
 
     this.http
       .post<void>(`${this.urlApi}api/Professor`, professor)
-      .subscribe((_) => {
-        this.obterProfessores(),
-          (this.professorNome = ''),
-          (this.professorCpf = ''),
-          (this.professorEmail = ''),
-          (this.professorTel = ''),
-          (this.professorMateria = '');
+      .subscribe(() => {
+        this.obterProfessores();
+        this.professorForm.reset(); // Reseta o formulário após adicionar
       });
   }
 }

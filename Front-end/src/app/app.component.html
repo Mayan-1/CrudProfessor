@@ -1,81 +1,118 @@
-<!-- Navegação -->
-<nav class="bg-gray-800 p-4">
-  <ul class="flex justify-around">
-    <li><a href="#" class="text-white font-bold">Home</a></li>
-    <li><a href="#" class="text-white font-bold">Professores</a></li>
-    <li><a href="#" class="text-white font-bold">Sobre</a></li>
-    <li><a href="#" class="text-white font-bold">Contato</a></li>
-  </ul>
-</nav>
+<!-- Buscar Professor -->
+<h1 class="text-2xl font-bold text-center mb-4">Buscar Professor</h1>
+<div class="flex justify-center mb-4">
+  <input
+    type="search"
+    placeholder="Digite o nome do professor"
+    [(ngModel)]="valorBusca"
+    (keyup.enter)="buscarPorNome()"
+    class="border border-gray-300 rounded-lg p-2 w-full max-w-xs"
+  />
+  <button
+    (click)="buscarPorNome()"
+    class="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+  >
+    Buscar
+  </button>
+</div>
+<p *ngIf="professorEncontrado$ | async as professor" class="text-center">
+  Professor encontrado: <span class="font-bold">{{ professor.nome }}</span>
+</p>
 
-<div class="container mx-auto p-6">
-  <!-- Buscar Professor -->
-  <h1 class="text-2xl font-bold text-center mb-4">Buscar Professor</h1>
-  <div class="flex justify-center mb-4">
-    <input
-      type="search"
-      placeholder="Digite o nome do professor"
-      [(ngModel)]="valorBusca"
-      (keyup.enter)="buscarPorNome()"
-      class="border border-gray-300 rounded-lg p-2 w-full max-w-xs"
-    />
-    <button
-      (click)="buscarPorNome()"
-      class="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-    >
-      Buscar
-    </button>
-  </div>
-  <p *ngIf="professorEncontrado$ | async as professor" class="text-center">
-    Professor encontrado: <span class="font-bold">{{ professor.nome }}</span>
-  </p>
-
-  <!-- Adicionar Professor -->
-  <h1 class="text-2xl font-bold text-center mt-8 mb-4">Adicionar Professor</h1>
+<!-- Adicionar Professor -->
+<h1 class="text-2xl font-bold text-center mt-8 mb-4">Adicionar Professor</h1>
+<form [formGroup]="professorForm" (ngSubmit)="addProfessor()">
   <div class="space-y-4">
     <div>
       <label class="block font-semibold mb-1">Nome</label>
       <input
         type="text"
-        [(ngModel)]="professorNome"
+        formControlName="nome"
         class="border border-gray-300 rounded-lg p-2 w-full"
       />
+      <p
+        *ngIf="
+          professorForm.controls['nome'].invalid &&
+          professorForm.controls['nome'].touched
+        "
+        class="text-red-500"
+      >
+        Nome é obrigatório.
+      </p>
     </div>
     <div>
       <label class="block font-semibold mb-1">CPF</label>
       <input
         type="text"
-        [(ngModel)]="professorCpf"
+        formControlName="cpf"
+        mask="000.000.000-00"
         class="border border-gray-300 rounded-lg p-2 w-full"
       />
+      <p
+        *ngIf="
+          professorForm.controls['cpf'].invalid &&
+          professorForm.controls['cpf'].touched
+        "
+        class="text-red-500"
+      >
+        CPF inválido ou obrigatório.
+      </p>
     </div>
     <div>
       <label class="block font-semibold mb-1">Email</label>
       <input
         type="email"
-        [(ngModel)]="professorEmail"
+        formControlName="email"
         class="border border-gray-300 rounded-lg p-2 w-full"
       />
+      <p
+        *ngIf="
+          professorForm.controls['email'].invalid &&
+          professorForm.controls['email'].touched
+        "
+        class="text-red-500"
+      >
+        Email inválido ou obrigatório.
+      </p>
     </div>
     <div>
       <label class="block font-semibold mb-1">Telefone</label>
       <input
         type="tel"
-        [(ngModel)]="professorTel"
+        formControlName="telefone"
+        mask="(00) 00000-0000"
         class="border border-gray-300 rounded-lg p-2 w-full"
       />
+      <p
+        *ngIf="
+          professorForm.controls['telefone'].invalid &&
+          professorForm.controls['telefone'].touched
+        "
+        class="text-red-500"
+      >
+        Telefone inválido ou obrigatório.
+      </p>
     </div>
     <div>
       <label class="block font-semibold mb-1">Matéria</label>
       <input
         type="text"
-        [(ngModel)]="professorMateria"
-        (keyup.enter)="addProfessor()"
+        formControlName="materia"
         class="border border-gray-300 rounded-lg p-2 w-full"
       />
+      <p
+        *ngIf="
+          professorForm.controls['materia'].invalid &&
+          professorForm.controls['materia'].touched
+        "
+        class="text-red-500"
+      >
+        Matéria é obrigatória.
+      </p>
     </div>
     <button
-      (click)="addProfessor()"
+      type="submit"
+      [disabled]="professorForm.invalid"
       class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 mt-4"
     >
       Adicionar
@@ -94,9 +131,9 @@
       </li>
     </ul>
   </div>
-</div>
 
-<!-- Rodapé -->
-<footer class="bg-gray-800 text-white text-center p-4 mt-8">
-  <p>&copy; 2024 Sua Aplicação. Todos os direitos reservados.</p>
-</footer>
+  <!-- Rodapé -->
+  <footer class="bg-gray-800 text-white text-center p-4 mt-8">
+    <p>&copy; 2024 Sua Aplicação. Todos os direitos reservados.</p>
+  </footer>
+</form>

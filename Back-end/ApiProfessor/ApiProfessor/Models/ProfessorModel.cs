@@ -16,6 +16,9 @@ public class ProfessorModel
     public string? Email { get; set; }
     [Required]
     [StringLength(15)]
+    public string? Senha { get; set; }
+    [Required]
+    [StringLength(15)]
     public string? Telefone { get; set; }
     [Required]
     [StringLength(30)]

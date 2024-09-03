@@ -14,7 +14,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IProfessorService, ProfessorService>();
 
+
+
 string stringMySql = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(stringMySql,
     ServerVersion.AutoDetect(stringMySql)));

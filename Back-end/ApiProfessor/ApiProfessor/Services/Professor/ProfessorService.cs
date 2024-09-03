@@ -26,6 +26,7 @@ namespace ApiProfessor.Services.Professor
                     Cpf = professorDto.Cpf,
                     Telefone = professorDto.Telefone,
                     Email = professorDto.Email,
+                    Senha = professorDto.Senha,
                     Materia = professorDto.Materia,
                 };
 
@@ -145,6 +146,7 @@ namespace ApiProfessor.Services.Professor
                 professor.Nome = professorDto.Nome;
                 professor.Cpf = professorDto.Cpf;
                 professor.Email = professorDto.Email;
+                professor.Senha = professorDto.Senha;
                 professor.Telefone = professorDto.Telefone;
                 professor.Materia = professorDto.Materia;
                 _context.Entry(professor).State = EntityState.Modified;
