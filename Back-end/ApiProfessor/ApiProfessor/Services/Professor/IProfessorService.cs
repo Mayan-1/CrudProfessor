@@ -1,4 +1,5 @@
 ﻿using ApiProfessor.Models;
+using ApiProfessor.Dto;
 using ApiProfessor.Dto.Professor;
 
 namespace ApiProfessor.Services.Professor
@@ -7,9 +8,9 @@ namespace ApiProfessor.Services.Professor
     {
         Task<IEnumerable<ProfessorModel>> GetAll();
         Task<ProfessorModel> GetByName(string nome);
-        Task<ResponseModel<ProfessorModel>> Get(int id);
+        Task<ProfessorModel> Get(int id);
         Task<ResponseModel<ProfessorModel>> Create(ProfessorDto professorDto);
-        Task<ResponseModel<IEnumerable<ProfessorModel>>> Update(int id, ProfessorDto professorDto);
+        Task<ProfessorModel> Update(int id, ProfessorEdicaoDto professorDto);
         Task<ResponseModel<IEnumerable<ProfessorModel>>> Delete(int id);
     }
 }

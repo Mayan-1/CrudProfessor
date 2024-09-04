@@ -2,6 +2,7 @@
 using ApiProfessor.Models;
 using Microsoft.EntityFrameworkCore;
 using ApiProfessor.Dto.Professor;
+using ApiProfessor.Dto;
 
 namespace ApiProfessor.Services.Professor
 {
@@ -73,29 +74,23 @@ namespace ApiProfessor.Services.Professor
             }
         }
 
-        public async Task<ResponseModel<ProfessorModel>> Get(int id)
+        public async Task<ProfessorModel> Get(int id)
         {
-            ResponseModel<ProfessorModel> resposta = new ResponseModel<ProfessorModel>();
             try
             {
                 var professor = await _context.Professores.FirstOrDefaultAsync(x => x.Id == id);
 
                 if (professor == null)
                 {
-                    resposta.Mensagem = "Nenhum registro localizado";
-                    return resposta;
+                    return professor;
                 }
 
-                resposta.Dados = professor;
-                resposta.Mensagem = "Professor localizado";
-                return resposta;
+                return professor;
 
             }
             catch (Exception ex)
             {
-                resposta.Mensagem = ex.Message;
-                resposta.Status = false;
-                return resposta;
+                throw ex;
             }
         }
 
@@ -130,39 +125,32 @@ namespace ApiProfessor.Services.Professor
             }
         }
 
-        public async Task<ResponseModel<IEnumerable<ProfessorModel>>> Update(int id, ProfessorDto professorDto)
+        public async Task<ProfessorModel> Update(int id, ProfessorEdicaoDto professorDto)
         {
-            ResponseModel<IEnumerable<ProfessorModel>> resposta = new ResponseModel<IEnumerable<ProfessorModel>>();
             try
             {
                 var professor = await _context.Professores.FirstOrDefaultAsync(x => x.Id == id);
 
                 if (professor == null)
                 {
-                    resposta.Mensagem = "Nenhum registro localizado";
-                    return resposta;
+                    return professor;
                 }
 
                 professor.Nome = professorDto.Nome;
                 professor.Cpf = professorDto.Cpf;
                 professor.Email = professorDto.Email;
-                professor.Senha = professorDto.Senha;
                 professor.Telefone = professorDto.Telefone;
                 professor.Materia = professorDto.Materia;
-                _context.Entry(professor).State = EntityState.Modified;
+                _context.Update(professor);
                 await _context.SaveChangesAsync();
 
-                resposta.Dados = await _context.Professores.ToListAsync();
-                resposta.Mensagem = "Professor atualizado com sucesso";
-                return resposta;
+                return professor;
 
 
             }
             catch (Exception ex)
             {
-                resposta.Mensagem = ex.Message;
-                resposta.Status = false;
-                return resposta;
+                throw ex;
             }
         }
     }

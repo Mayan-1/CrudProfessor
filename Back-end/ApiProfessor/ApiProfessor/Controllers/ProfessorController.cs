@@ -1,4 +1,5 @@
-﻿using ApiProfessor.Dto.Professor;
+﻿using ApiProfessor.Dto;
+using ApiProfessor.Dto.Professor;
 using ApiProfessor.Models;
 using ApiProfessor.Services.Professor;
 using Microsoft.AspNetCore.Http;
@@ -17,7 +18,7 @@ namespace ApiProfessor.Controllers
             _professorService = professorService;
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<ProfessorModel>> Get(int id)
         {
             var professor = await _professorService.Get(id);
@@ -39,7 +40,7 @@ namespace ApiProfessor.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<ResponseModel<ProfessorModel>>> Update(int id, ProfessorDto professorDto)
+        public async Task<ActionResult<ResponseModel<ProfessorModel>>> Update(int id, ProfessorEdicaoDto professorDto)
         {
             var professor = await _professorService.Update(id, professorDto);
             return Ok(professor);
@@ -53,7 +54,7 @@ namespace ApiProfessor.Controllers
             return Ok(professores);
         }
 
-        [HttpGet("{nome}")]
+        [HttpGet("porNome/{nome}")]
         public async Task<ActionResult<ProfessorModel>> GetByName(string nome)
         {
             var professor = await _professorService.GetByName(nome);
